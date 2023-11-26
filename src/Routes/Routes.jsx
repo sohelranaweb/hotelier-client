@@ -11,6 +11,10 @@ import RequestedMeals from "../pages/Dashboard/RequestedMeals/RequestedMeals";
 import MyReviews from "../pages/Dashboard/MyReviews/MyReviews";
 import AdminProfile from "../pages/Dashboard/AdminProfile/AdminProfile";
 import ManageUsers from "../pages/Dashboard/ManageUsers/ManageUsers";
+import AdminRoute from "./AdminRoute";
+import Meals from "../pages/Meals/Meals";
+import AddMeal from "../pages/Dashboard/AddMeal/AddMeal";
+import AllMeals from "../pages/Dashboard/AllMeals/AllMeals";
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +24,10 @@ export const router = createBrowserRouter([
       {
         path: "/",
         element: <Home></Home>,
+      },
+      {
+        path: "meals",
+        element: <Meals></Meals>,
       },
       {
         path: "/meal/:id",
@@ -57,11 +65,35 @@ export const router = createBrowserRouter([
       // admin route
       {
         path: "adminProfile",
-        element: <AdminProfile></AdminProfile>,
+        element: (
+          <AdminRoute>
+            <AdminProfile></AdminProfile>
+          </AdminRoute>
+        ),
       },
       {
         path: "manageUsers",
-        element: <ManageUsers></ManageUsers>,
+        element: (
+          <AdminRoute>
+            <ManageUsers></ManageUsers>
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "addMeal",
+        element: (
+          <AdminRoute>
+            <AddMeal></AddMeal>
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "allMeals",
+        element: (
+          <AdminRoute>
+            <AllMeals></AllMeals>
+          </AdminRoute>
+        ),
       },
     ],
   },

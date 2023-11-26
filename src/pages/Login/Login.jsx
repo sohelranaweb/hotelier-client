@@ -1,8 +1,6 @@
 import { useForm } from "react-hook-form";
-import { FcGoogle } from "react-icons/fc";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
-import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import SocialLogin from "../Shared/SocialLogin/SocialLogin";
 
@@ -14,7 +12,7 @@ const Login = () => {
   const {
     register,
     handleSubmit,
-    // reset,
+    reset,
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
@@ -28,6 +26,7 @@ const Login = () => {
         //   title: "Success",
         //   text: "Login successfully",
         // });
+        reset();
         toast.success("Successfully loggedin!");
         navigate(from, { replace: true });
       })
