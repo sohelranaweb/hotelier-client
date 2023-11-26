@@ -10,7 +10,7 @@ const MealsCategory = () => {
   const breakfast = meals.filter((meal) => meal.category === "breakfast");
   const lunch = meals.filter((meal) => meal.category === "lunch");
   const dinner = meals.filter((meal) => meal.category === "dinner");
-  console.log(breakfast, lunch, dinner);
+  // console.log(breakfast, lunch, dinner);
   return (
     <div>
       <h1 className="text-3xl font-bold text-center my-2">Meals By Category</h1>

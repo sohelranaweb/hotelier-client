@@ -1,7 +1,9 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
-import { FcGoogle } from "react-icons/fc";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
+import toast from "react-hot-toast";
+import SocialLogin from "../Shared/SocialLogin/SocialLogin";
 
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
@@ -12,14 +14,48 @@ const SignUp = () => {
     reset,
     formState: { errors },
   } = useForm();
+  const axiosPublic = useAxiosPublic();
   const { createUser, updateUserProfile } = useAuth();
+  let navigate = useNavigate();
+  let location = useLocation();
+  const from = location.state?.from?.pathname || "/";
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
-    createUser(data.email, data.password).then((result) => {
-      const loggedUser = result.user;
-      console.log(loggedUser);
+    const imageFile = { image: data.photoURL[0] };
+    const res = await axiosPublic.post(image_hosting_api, imageFile, {
+      headers: {
+        "content-type": "multipart/form-data",
+      },
     });
+    createUser(data.email, data.password)
+      .then((result) => {
+        const loggedUser = result.user;
+        console.log(loggedUser);
+
+        // console.log(res.data);
+        updateUserProfile(data.name, res.data.data.display_url).then(() => {
+          const userInfo = {
+            name: data.name,
+            email: data.email,
+            badge: "Bronze",
+          };
+          // console.log("user info updated");
+          axiosPublic.post("/users", userInfo).then((res) => {
+            if (res.data.insertedId) {
+              console.log("user added to mongodb");
+              reset();
+
+              toast.success("User Created successfully!");
+
+              navigate(from, { replace: true });
+            }
+          });
+        });
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
   };
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -135,7 +171,7 @@ const SignUp = () => {
               type="submit"
               className="bg-[#f62b48] w-full rounded-md py-3 text-white"
             >
-              Continue
+              Sign Up
               {/* {loading ? (
                 <TbFidgetSpinner className="animate-spin m-auto"></TbFidgetSpinner>
               ) : (
@@ -151,14 +187,15 @@ const SignUp = () => {
           </p>
           <div className="flex-1 h-px sm:w-16 dark:bg-gray-700"></div>
         </div>
-        <div
+        <SocialLogin></SocialLogin>
+        {/* <div
           //   onClick={handleGoogleSignIn}
           className="flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer"
         >
           <FcGoogle size={32} />
 
           <p>Continue with Google</p>
-        </div>
+        </div> */}
         <p className="px-6 text-sm text-center text-gray-400">
           Already have an account?{" "}
           <Link
