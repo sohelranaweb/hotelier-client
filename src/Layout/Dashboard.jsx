@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
-import { FaAd, FaHome, FaUtensils } from "react-icons/fa";
+import { FaAd, FaEdit, FaHome, FaUtensils } from "react-icons/fa";
 import { FaCodePullRequest } from "react-icons/fa6";
 import { MdRateReview, MdUpcoming } from "react-icons/md";
 import { FaUsers } from "react-icons/fa";

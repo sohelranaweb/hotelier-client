@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { FaTrashAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
-const AllMeals = () => {
+const AllReviews = () => {
   const axiosSecure = useAxiosSecure();
   const { data: meals = [], refetch } = useQuery({
     queryKey: ["meals"],
@@ -39,20 +39,17 @@ const AllMeals = () => {
   };
   return (
     <div>
-      <h1>All meals here: {meals.length}</h1>
+      <h1>All revews page</h1>
       <div>
         <div className="overflow-x-auto">
           <table className="table table-zebra">
             {/* head */}
             <thead className="bg-orange-400 text-white">
               <tr>
-                <th className="text-base"></th>
+                <th className="text-base">#</th>
                 <th className="text-base">Meal Title</th>
                 <th className="text-base">Likes</th>
                 <th className="text-base">Reviews</th>
-                <th className="text-base">Distributer Name</th>
-                <th className="text-base">Distributer Email</th>
-                <th className="text-base">Update</th>
                 <th className="text-base">Delete</th>
                 <th className="text-base">View Meal</th>
               </tr>
@@ -64,16 +61,7 @@ const AllMeals = () => {
                   <td className="text-base">{meal.title}</td>
                   <td className="text-base">{meal.likes}</td>
                   <td className="text-base">{meal.reviews}</td>
-                  <td className="text-base">{meal.admin_name}</td>
-                  <td className="text-base">{meal.admin_email}</td>
-                  <td className="text-base">
-                    <Link
-                      to={`/updateMeal/${meal._id}`}
-                      className="btn btn-ghost btn-md"
-                    >
-                      <FaEdit className="text-red-600 text-lg"></FaEdit>
-                    </Link>
-                  </td>
+
                   <td className="text-base">
                     <button
                       onClick={() => handleDelete(meal)}
@@ -95,4 +83,4 @@ const AllMeals = () => {
   );
 };
 
-export default AllMeals;
+export default AllReviews;

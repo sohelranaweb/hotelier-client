@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import DropdownMenu from "./DropDownMenu";
 
 const Navbar = () => {
@@ -36,7 +36,7 @@ const Navbar = () => {
   );
   return (
     <>
-      <div className="navbar fixed z-10 bg-opacity-30 bg-red-400 max-w-screen-xl mx-auto  lg:px-0  ">
+      <div className="navbar fixed z-10 bg-opacity-30 bg-black max-w-screen-xl mx-auto  lg:px-0  ">
         <div className="navbar-start">
           <div className="dropdown">
             <label tabIndex={0} className="btn btn-ghost lg:hidden">
@@ -62,9 +62,9 @@ const Navbar = () => {
               {navOptions}
             </ul>
           </div>
-          <a>
-            <img src="https://i.ibb.co/QJWFFyK/navbar-logo.webp" alt="" />
-          </a>
+          <Link className="pl-2" to="/">
+            <img src="https://i.ibb.co/HKpN8FJ/footer-logo.webp" alt="" />
+          </Link>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">{navOptions}</ul>

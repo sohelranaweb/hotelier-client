@@ -1,53 +1,60 @@
-import { useForm } from "react-hook-form";
-import useAxiosPublic from "../../../hooks/useAxiosPublic";
+import { useParams } from "react-router-dom";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import useAuth from "../../../hooks/useAuth";
 
-const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
-const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
-const AddMeal = () => {
-  const { user } = useAuth();
-  const axiosPublic = useAxiosPublic();
+const UpdateMeal = () => {
+  const { id } = useParams();
   const axiosSecure = useAxiosSecure();
-  const { register, handleSubmit, reset } = useForm();
-  const onSubmit = async (data) => {
-    console.log(data);
-    const imageFile = { image: data.image[0] };
-    const res = await axiosPublic.post(image_hosting_api, imageFile, {
-      headers: {
-        "content-type": "multipart/form-data",
-      },
-    });
-    if (res.data.success) {
-      const mealInfo = {
-        admin_name: data.admin_name,
-        admin_email: data.admin_email,
-        title: data.meal_title,
-        likes: data.like,
-        date: data.date,
-        reviews: data.review,
-        ingredients: data.ingredients,
-        category: data.category,
-        price: parseFloat(data.price),
-        rating: parseFloat(data.rating),
-        description: data.description,
-        meal_image: res.data.data.display_url,
-      };
-      const mealRes = await axiosSecure.post("/meals", mealInfo);
-      console.log(mealRes.data);
-      if (mealRes.data.insertedId) {
-        reset();
-        toast.success(`${data.meal_title} is added to meals`);
+  const { data: meal = [] } = useQuery({
+    queryKey: ["meal"],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/meal/${id}`);
+      return res.data;
+    },
+  });
+  console.log(meal);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const title = form.meal_title.value;
+    const admin_name = form.admin_name.value;
+    const admin_email = form.admin_email.value;
+    const likes = form.like.value;
+    const date = form.date.value;
+    const reviews = form.review.value;
+    const ingredients = form.ingredients.value;
+    const category = form.category.value;
+    const price = form.price.value;
+    const rating = form.rating.value;
+    const description = form.description.value;
+    const updatedMeal = {
+      title,
+      admin_name,
+      admin_email,
+      likes,
+      date,
+      reviews,
+      ingredients,
+      category,
+      price,
+      rating,
+      description,
+    };
+    console.log(updatedMeal);
+    axiosSecure.put(`/meals/${id}`, updatedMeal).then((res) => {
+      console.log(res.data);
+      if (res.data.modifiedCount > 0) {
+        toast.success(`meal is an updated now!`);
       }
-    }
-    // console.log(res.data);
+    });
   };
   return (
-    <div>
-      <h1>Add Meal page</h1>
+    <div className="pt-28 mb-16">
+      <h1>update meal page: {id}</h1>
       <div className="w-full h-[600px] flex flex-col justify-center items-center text-gray-800 rounded-xl bg-gray-50">
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
             <div className="space-y-6">
               {/* admin name  */}
@@ -58,8 +65,8 @@ const AddMeal = () => {
                 <input
                   className="w-full px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500 rounded-md "
                   name="admin_name"
-                  defaultValue={user?.displayName}
-                  {...register("admin_name", { required: true })}
+                  defaultValue={meal.admin_name}
+                  // {...register("admin_name")}
                   id="location"
                   type="text"
                   placeholder="Admin Name"
@@ -71,8 +78,8 @@ const AddMeal = () => {
                 <input
                   className="w-full px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500 rounded-md "
                   name="admin_email"
-                  defaultValue={user?.email}
-                  {...register("admin_email", { required: true })}
+                  defaultValue={meal?.admin_email}
+                  // {...register("admin_email")}
                   type="text"
                   placeholder="Admin Email"
                 />
@@ -82,18 +89,25 @@ const AddMeal = () => {
                 <label className="label">
                   <span className="label-text">Category*</span>
                 </label>
-                <select
-                  defaultValue="default"
-                  {...register("category", { required: true })}
+                <input
+                  className="w-full px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500 rounded-md "
+                  name="category"
+                  defaultValue={meal?.category}
+                  // {...register("admin_email")}
+                  type="text"
+                  placeholder="Category"
+                />
+                {/* <select
+                  defaultValue={meal?.category}
                   className="select select-bordered w-full "
                 >
-                  <option disabled value="default">
+                  <option disabled value="">
                     select category
                   </option>
                   <option value="breakfast">Breakfast</option>
                   <option value="dinner">Dinner</option>
                   <option value="lunch">Lunch</option>
-                </select>
+                </select> */}
               </div>
               {/* description  */}
               <div className="space-y-1 text-sm">
@@ -103,7 +117,8 @@ const AddMeal = () => {
 
                 <textarea
                   id="description"
-                  {...register("description", { required: true })}
+                  defaultValue={meal?.description}
+                  // {...register("description")}
                   className="block rounded-md focus:rose-300 w-full h-12 px-4 py-3 text-gray-800  border border-rose-300 focus:outline-rose-500 "
                   name="description"
                 ></textarea>
@@ -113,7 +128,8 @@ const AddMeal = () => {
                 <label className="block text-gray-600">Ingredients</label>
 
                 <textarea
-                  {...register("ingredients", { required: true })}
+                  defaultValue={meal?.ingredients}
+                  // {...register("ingredients")}
                   className="block rounded-md focus:rose-300 w-full h-12 px-4 py-3 text-gray-800  border border-rose-300 focus:outline-rose-500 "
                   name="ingredients"
                 ></textarea>
@@ -129,7 +145,8 @@ const AddMeal = () => {
                 <input
                   className="w-full px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500 rounded-md "
                   name="meal_title"
-                  {...register("meal_title", { required: true })}
+                  defaultValue={meal?.title}
+                  // {...register("meal_title")}
                   id="title"
                   type="text"
                   placeholder="Title"
@@ -143,32 +160,37 @@ const AddMeal = () => {
                 <input
                   className="w-full px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500 rounded-md "
                   name="date"
-                  {...register("date", { required: true })}
+                  defaultValue={meal?.date}
+                  // {...register("date")}
                   id="title"
                   type="date"
                   placeholder="Date"
                 />
               </div>
               {/* meal image  */}
-              <div className=" p-4 bg-white w-full  m-auto rounded-lg">
+              <div className="space-y-1 text-sm">
+                <label htmlFor="title" className="block text-gray-600">
+                  Image
+                </label>
                 <input
-                  type="file"
-                  {...register("image", { required: true })}
+                  className="w-full px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500 rounded-md "
                   name="image"
-                  className="file-input w-full max-w-xs"
+                  defaultValue={meal?.meal_image}
+                  // {...register("date")}
+                  id="title"
+                  type="text"
+                  placeholder="Image"
                 />
               </div>
               {/* price  */}
               <div className="flex justify-between gap-2">
                 <div className="space-y-1 text-sm">
-                  <label htmlFor="price" className="block text-gray-600">
-                    Price
-                  </label>
+                  <label className="block text-gray-600">Price</label>
                   <input
                     className="w-full px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500 rounded-md "
                     name="price"
-                    {...register("price", { required: true })}
-                    id="price"
+                    defaultValue={meal?.price}
+                    // {...register("price")}
                     type="number"
                     placeholder="Price"
                   />
@@ -179,7 +201,8 @@ const AddMeal = () => {
                   <input
                     className="w-full px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500 rounded-md "
                     name="rating"
-                    {...register("rating", { required: true })}
+                    defaultValue={meal?.rating}
+                    // {...register("rating")}
                     type="number"
                     placeholder="Rating"
                   />
@@ -192,7 +215,8 @@ const AddMeal = () => {
                   <input
                     className="w-full px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500 rounded-md "
                     name="like"
-                    {...register("like", { required: true })}
+                    defaultValue={meal?.likes}
+                    // {...register("like")}
                     type="number"
                     placeholder="Likes"
                   />
@@ -203,7 +227,8 @@ const AddMeal = () => {
                   <input
                     className="w-full px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500 rounded-md "
                     name="review"
-                    {...register("review", { required: true })}
+                    defaultValue={meal?.reviews}
+                    // {...register("review")}
                     type="number"
                     placeholder="Reviews"
                   />
@@ -212,29 +237,23 @@ const AddMeal = () => {
             </div>
           </div>
 
-          <div className="flex gap-6">
-            <button
+          <div className="mt-12">
+            <input
+              type="submit"
+              value="Update meal"
+              className="btn btn-block text-white bg-[#72B261]"
+            />
+            {/* <button
               type="submit"
               className="w-full p-3 mt-5 text-center font-medium text-white transition duration-200 rounded shadow-md bg-[#f62b48]"
             >
-              Add Meal
-              {/* {loading ? (
+              Update Meal
+              {loading ? (
               <TbFidgetSpinner className="m-auto animate-spin" size={24} />
             ) : (
               "Save & Continue"
-            )} */}
-            </button>
-            <button
-              type="submit"
-              className="w-full p-3 mt-5 text-center font-medium text-white transition duration-200 rounded shadow-md bg-[#f62b48]"
-            >
-              Upcoming Meal
-              {/* {loading ? (
-              <TbFidgetSpinner className="m-auto animate-spin" size={24} />
-            ) : (
-              "Save & Continue"
-            )} */}
-            </button>
+            )}
+            </button> */}
           </div>
         </form>
       </div>
@@ -242,4 +261,4 @@ const AddMeal = () => {
   );
 };
 
-export default AddMeal;
+export default UpdateMeal;

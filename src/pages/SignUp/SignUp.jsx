@@ -39,6 +39,7 @@ const SignUp = () => {
             name: data.name,
             email: data.email,
             badge: "Bronze",
+            image: res.data.data.display_url,
           };
           // console.log("user info updated");
           axiosPublic.post("/users", userInfo).then((res) => {

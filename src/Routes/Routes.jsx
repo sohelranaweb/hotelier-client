@@ -2,7 +2,6 @@ import { createBrowserRouter } from "react-router-dom";
 import Main from "../Layout/Main";
 import Home from "../pages/Home/Home/Home";
 import MealDetails from "../pages/MealDetails/MealDetails";
-
 import Login from "../pages/Login/Login";
 import SignUp from "../pages/Signup/Signup";
 import Dashboard from "../Layout/Dashboard";
@@ -15,6 +14,8 @@ import AdminRoute from "./AdminRoute";
 import Meals from "../pages/Meals/Meals";
 import AddMeal from "../pages/Dashboard/AddMeal/AddMeal";
 import AllMeals from "../pages/Dashboard/AllMeals/AllMeals";
+import AllReviews from "../pages/Dashboard/AllReviews/AllReviews";
+import UpdateMeal from "../pages/Dashboard/UpdateMeal/UpdateMeal";
 
 export const router = createBrowserRouter([
   {
@@ -42,6 +43,10 @@ export const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login></Login>,
+      },
+      {
+        path: "/updateMeal/:id",
+        element: <UpdateMeal></UpdateMeal>,
       },
     ],
   },
@@ -94,6 +99,10 @@ export const router = createBrowserRouter([
             <AllMeals></AllMeals>
           </AdminRoute>
         ),
+      },
+      {
+        path: "allReviews",
+        element: <AllReviews></AllReviews>,
       },
     ],
   },
