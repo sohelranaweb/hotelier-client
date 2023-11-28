@@ -16,6 +16,10 @@ import AddMeal from "../pages/Dashboard/AddMeal/AddMeal";
 import AllMeals from "../pages/Dashboard/AllMeals/AllMeals";
 import AllReviews from "../pages/Dashboard/AllReviews/AllReviews";
 import UpdateMeal from "../pages/Dashboard/UpdateMeal/UpdateMeal";
+import UpcomingMeals from "../pages/UpcomingMeals/UpcomingMeals";
+import Checkout from "../pages/Checkout/Checkout";
+import PrivateRoute from "./PrivateRoute";
+import Payment from "../pages/Checkout/Payment";
 
 export const router = createBrowserRouter([
   {
@@ -47,6 +51,22 @@ export const router = createBrowserRouter([
       {
         path: "/updateMeal/:id",
         element: <UpdateMeal></UpdateMeal>,
+      },
+      {
+        path: "/upcoming-meals",
+        element: <UpcomingMeals></UpcomingMeals>,
+      },
+      {
+        path: "/checkout/:package_name",
+        element: (
+          <PrivateRoute>
+            <Checkout></Checkout>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/payment/:package_name",
+        element: <Payment></Payment>,
       },
     ],
   },

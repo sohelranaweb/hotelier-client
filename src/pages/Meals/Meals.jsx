@@ -6,7 +6,7 @@ import MealCard from "../../components/MealCard/MealCard";
 const Meals = () => {
   const axiosPublic = useAxiosPublic();
   const { data: meals = [] } = useQuery({
-    queryKey: ["users"],
+    queryKey: ["meals"],
     queryFn: async () => {
       const res = await axiosPublic.get("/meals");
       return res.data;

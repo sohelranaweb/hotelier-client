@@ -1,7 +1,9 @@
 import { Link, NavLink } from "react-router-dom";
 import DropdownMenu from "./DropDownMenu";
-
+import useUpcomingMeals from "../../../hooks/useUpcomingMeals";
+import { MdNotifications } from "react-icons/md";
 const Navbar = () => {
+  const [upcomingMeals] = useUpcomingMeals();
   const navOptions = (
     <>
       <li>
@@ -30,6 +32,23 @@ const Navbar = () => {
           }
         >
           Meals
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to="/upcoming-meals"
+          className={({ isActive, isPending }) =>
+            isPending
+              ? "pending"
+              : isActive
+              ? "bg-[#f62b48] text-white text-lg font-bold"
+              : "text-lg font-bold text-white"
+          }
+        >
+          <MdNotifications className="text-lg font-bold"></MdNotifications>
+          <div className="badge badge-secondary text-lg font-bold">
+            +{upcomingMeals.length}
+          </div>
         </NavLink>
       </li>
     </>

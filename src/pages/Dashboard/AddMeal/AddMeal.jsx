@@ -10,7 +10,7 @@ const AddMeal = () => {
   const { user } = useAuth();
   const axiosPublic = useAxiosPublic();
   const axiosSecure = useAxiosSecure();
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset, setValue } = useForm();
   const onSubmit = async (data) => {
     console.log(data);
     const imageFile = { image: data.image[0] };
@@ -34,12 +34,26 @@ const AddMeal = () => {
         description: data.description,
         meal_image: res.data.data.display_url,
       };
-      const mealRes = await axiosSecure.post("/meals", mealInfo);
+
+      const apiEndpoint =
+        data.buttonClicked === "add" ? "/meals" : "/upcoming-meals";
+
+      const mealRes = await axiosSecure.post(apiEndpoint, mealInfo);
       console.log(mealRes.data);
       if (mealRes.data.insertedId) {
         reset();
-        toast.success(`${data.meal_title} is added to meals`);
+        const successMessage =
+          data.buttonClicked === "add"
+            ? "added to meals"
+            : "added to upcoming meals";
+        toast.success(`${data.meal_title} is ${successMessage}`);
       }
+      // const mealRes = await axiosSecure.post("/meals", mealInfo);
+      // console.log(mealRes.data);
+      // if (mealRes.data.insertedId) {
+      //   reset();
+      //   toast.success(`${data.meal_title} is added to meals`);
+      // }
     }
     // console.log(res.data);
   };
@@ -215,6 +229,7 @@ const AddMeal = () => {
           <div className="flex gap-6">
             <button
               type="submit"
+              onClick={() => setValue("buttonClicked", "add")}
               className="w-full p-3 mt-5 text-center font-medium text-white transition duration-200 rounded shadow-md bg-[#f62b48]"
             >
               Add Meal
@@ -226,6 +241,7 @@ const AddMeal = () => {
             </button>
             <button
               type="submit"
+              onClick={() => setValue("buttonClicked", "upcoming")}
               className="w-full p-3 mt-5 text-center font-medium text-white transition duration-200 rounded shadow-md bg-[#f62b48]"
             >
               Upcoming Meal
