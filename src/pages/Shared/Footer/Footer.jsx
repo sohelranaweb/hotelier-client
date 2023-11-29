@@ -5,9 +5,9 @@ const Footer = () => {
         <aside>
           <img src="https://i.ibb.co/HKpN8FJ/footer-logo.webp" alt="" />
           <p>
-            ACME Industries Ltd.
+            Hotelier Industries Ltd.
             <br />
-            Providing reliable tech since 1992
+            Providing reliable food since 2002
           </p>
         </aside>
         <nav>
@@ -51,7 +51,9 @@ const Footer = () => {
       </footer>
       <footer className="footer footer-center p-4 bg-neutral text-neutral-content">
         <aside>
-          <p>Copyright © 2023 - All right reserved by ACME Industries Ltd</p>
+          <p>
+            Copyright © 2023 - All right reserved by Hotelier Industries Ltd
+          </p>
         </aside>
       </footer>
     </div>

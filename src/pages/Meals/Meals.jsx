@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import { useEffect, useState } from "react";
 import MealCard from "../../components/MealCard/MealCard";
+import { Helmet } from "react-helmet-async";
 
 const Meals = () => {
   const axiosPublic = useAxiosPublic();
@@ -38,6 +39,9 @@ const Meals = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>Hotelier | All Meals</title>
+      </Helmet>
       <div
         className="hero h-[80vh] mb-10"
         style={{

@@ -1,31 +1,34 @@
-import { useQuery } from "@tanstack/react-query";
-import useAuth from "../../../hooks/useAuth";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { Helmet } from "react-helmet-async";
+import useUser from "../../../hooks/useUser";
 
 const MyProfile = () => {
-  const { user } = useAuth();
-  const axiosSecure = useAxiosSecure();
-  const { data: adminUser } = useQuery({
-    queryKey: ["adminUser"],
-    queryFn: async () => {
-      const res = await axiosSecure.get(`/users/${user?.email}`);
-      return res.data;
-    },
-  });
-  console.log(adminUser);
+  const loggedUser = useUser();
+  // const { user } = useAuth();
+  // const axiosSecure = useAxiosSecure();
+  // const { data: adminUser } = useQuery({
+  //   queryKey: ["adminUser"],
+  //   queryFn: async () => {
+  //     const res = await axiosSecure.get(`/users/${user?.email}`);
+  //     return res.data;
+  //   },
+  // });
+  // console.log(adminUser);
   return (
     <div>
+      <Helmet>
+        <title>Hotelier | User Profile</title>
+      </Helmet>
       <div className="bg-white shadow-lg rounded-2xl w-3/5">
         <img
           alt="profile"
-          src="https://wallpapercave.com/wp/wp10784415.jpg"
+          src="https://i.ibb.co/k8Xs4Dm/my-Profile.jpg"
           className="w-full mb-4 rounded-t-lg h-36"
         />
         <div className="flex flex-col items-center justify-center p-4 -mt-16">
           <a href="#" className="relative block">
             <img
               alt="profile"
-              src={adminUser?.image}
+              src={loggedUser?.image}
               className="mx-auto object-cover rounded-full h-24 w-24  border-2 border-white "
             />
           </a>
@@ -41,19 +44,19 @@ const MyProfile = () => {
               <p className="flex flex-col">
                 Name
                 <span className="font-bold text-black my-2 ">
-                  {adminUser?.name}
+                  {loggedUser?.name}
                 </span>
               </p>
               <p className="flex flex-col">
                 Email
                 <span className="font-bold text-black my-2">
-                  {adminUser?.email}
+                  {loggedUser?.email}
                 </span>
               </p>
               <p className="flex flex-col">
                 Badge
                 <span className="font-bold text-black my-2">
-                  {adminUser?.badge}
+                  {loggedUser?.badge}
                 </span>
               </p>
             </div>

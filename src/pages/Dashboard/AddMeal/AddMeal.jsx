@@ -3,6 +3,7 @@ import useAxiosPublic from "../../../hooks/useAxiosPublic";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import useAuth from "../../../hooks/useAuth";
+import { Helmet } from "react-helmet-async";
 
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
@@ -48,18 +49,13 @@ const AddMeal = () => {
             : "added to upcoming meals";
         toast.success(`${data.meal_title} is ${successMessage}`);
       }
-      // const mealRes = await axiosSecure.post("/meals", mealInfo);
-      // console.log(mealRes.data);
-      // if (mealRes.data.insertedId) {
-      //   reset();
-      //   toast.success(`${data.meal_title} is added to meals`);
-      // }
     }
-    // console.log(res.data);
   };
   return (
     <div>
-      <h1>Add Meal page</h1>
+      <Helmet>
+        <title>Hotelier | Add Meal</title>
+      </Helmet>
       <div className="w-full h-[600px] flex flex-col justify-center items-center text-gray-800 rounded-xl bg-gray-50">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">

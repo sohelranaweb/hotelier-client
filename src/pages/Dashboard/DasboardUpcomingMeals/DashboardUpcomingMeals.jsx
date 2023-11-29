@@ -1,16 +1,14 @@
-import { Helmet } from "react-helmet-async";
-import useMealRequest from "../../../hooks/useMealRequest";
-import { Link } from "react-router-dom";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import useUpcomingMeals from "../../../hooks/useUpcomingMeals";
+import { Helmet } from "react-helmet-async";
 
-const MyReviews = () => {
-  const [meals] = useMealRequest();
-  // const status = meals.map((meal) => meal.status);
-
+const DashboardUpcomingMeals = () => {
+  const [meals] = useUpcomingMeals();
   return (
     <div>
       <Helmet>
-        <title>Hotelier | User Review</title>
+        <title>Hotelier | Dashboard Upcoming meals</title>
       </Helmet>
       <div className="overflow-x-auto">
         <table className="table table-zebra">
@@ -21,6 +19,8 @@ const MyReviews = () => {
               <th className="text-base">Meal Title</th>
               <th className="text-base">Likes</th>
               <th className="text-base">Reviews</th>
+              <th className="text-base">Distributer Name</th>
+              <th className="text-base">Distributer Email</th>
               <th className="text-base">Update</th>
               <th className="text-base">Delete</th>
               <th className="text-base">View Meal</th>
@@ -33,6 +33,8 @@ const MyReviews = () => {
                 <td className="text-base">{meal.title}</td>
                 <td className="text-base">{meal.likes}</td>
                 <td className="text-base">{meal.reviews}</td>
+                <td className="text-base">{meal.admin_name}</td>
+                <td className="text-base">{meal.admin_email}</td>
                 <td className="text-base">
                   <Link
                     to={`/updateMeal/${meal._id}`}
@@ -61,4 +63,4 @@ const MyReviews = () => {
   );
 };
 
-export default MyReviews;
+export default DashboardUpcomingMeals;

@@ -4,7 +4,7 @@ import useBadge from "../../../hooks/useBadge";
 const Membership = () => {
   const [badges] = useBadge();
   return (
-    <div className="flex justify-between">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* card 1  */}
       {badges.map((badge) => (
         <div

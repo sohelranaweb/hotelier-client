@@ -2,13 +2,15 @@ import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useMeal from "../../../hooks/useMeal";
+import { Helmet } from "react-helmet-async";
 
 const AdminProfile = () => {
   const [meals] = useMeal();
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const { data: adminUser } = useQuery({
-    queryKey: ["adminUser"],
+    enabled: !!user?.email,
+    queryKey: ["adminUser", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/users/${user?.email}`);
       return res.data;
@@ -17,10 +19,13 @@ const AdminProfile = () => {
   console.log(adminUser);
   return (
     <div>
+      <Helmet>
+        <title>Hotelier | Admin Profile</title>
+      </Helmet>
       <div className="bg-white shadow-lg rounded-2xl w-3/5">
         <img
           alt="profile"
-          src="https://wallpapercave.com/wp/wp10784415.jpg"
+          src="https://i.ibb.co/TmRbd97/profile-Bg.jpg"
           className="w-full mb-4 rounded-t-lg h-36"
         />
         <div className="flex flex-col items-center justify-center p-4 -mt-16">

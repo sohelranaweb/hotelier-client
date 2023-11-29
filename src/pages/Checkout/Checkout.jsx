@@ -9,7 +9,6 @@ const Checkout = () => {
   //   console.log(badge);
   return (
     <div className="pt-20 mb-16">
-      <h1>Checkout page: {package_name}</h1>
       <div className="card w-1/2 bg-base-100 shadow-xl mx-auto my-4">
         <figure>
           <img src={badge.image} alt="Shoes" />

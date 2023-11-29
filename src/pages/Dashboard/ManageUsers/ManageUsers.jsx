@@ -3,6 +3,7 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { FaTrashAlt, FaUsers } from "react-icons/fa";
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
+import { Helmet } from "react-helmet-async";
 
 const ManageUsers = () => {
   const axiosSecure = useAxiosSecure();
@@ -44,31 +45,26 @@ const ManageUsers = () => {
       if (res.data.modifiedCount > 0) {
         refetch();
         toast.success(`${user.name} is an admin now!`);
-        // Swal.fire({
-        //   position: "top-end",
-        //   icon: "success",
-        //   title: `${user.name} is an admin now!`,
-        //   showConfirmButton: false,
-        //   timer: 1500,
-        // });
       }
     });
   };
   return (
     <div>
-      <h1>Total Users: {users.length}</h1>
+      <Helmet>
+        <title>Hotelier | Manage Users</title>
+      </Helmet>
       <div>
         <div className="overflow-x-auto">
           <table className="table table-zebra">
             {/* head */}
-            <thead>
+            <thead className="bg-gray-600 text-white">
               <tr>
-                <th></th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Status</th>
-                <th>Action</th>
+                <th className="text-base">Serial</th>
+                <th className="text-base">Name</th>
+                <th className="text-base">Email</th>
+                <th className="text-base">Role</th>
+                <th className="text-base">Status</th>
+                <th className="text-base">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -83,7 +79,7 @@ const ManageUsers = () => {
                     ) : (
                       <button
                         onClick={() => handleMakeAdmin(user)}
-                        className="btn bg-orange-400 btn-md"
+                        className="btn bg-stone-400 btn-md"
                       >
                         <FaUsers className="text-white text-xl"></FaUsers>
                       </button>

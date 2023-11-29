@@ -1,22 +1,24 @@
-import { Rating } from "@smastrom/react-rating";
-import {
-  Link,
-  useLoaderData,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
-import { MdPreview } from "react-icons/md";
-import useAuth from "../../hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import Swal from "sweetalert2";
-import useUser from "../../hooks/useUser";
-import toast from "react-hot-toast";
+import { Rating } from "@smastrom/react-rating";
+import { MdPreview } from "react-icons/md";
 import { Helmet } from "react-helmet-async";
 
-const MealDetails = () => {
-  const loadedMeal = useLoaderData();
+const UpcomingMealDetails = () => {
+  const axiosSecure = useAxiosSecure();
+  const { id } = useParams();
+  console.log(id);
+  const { data: upcomingMeals = [] } = useQuery({
+    enabled: !!id,
+    queryKey: ["upcomingMeals", id],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/upcomingMeal/${id}`);
+      return res.data;
+    },
+  });
+  console.log(upcomingMeals);
   const {
-    _id,
     meal_image,
     title,
     admin_name,
@@ -27,68 +29,15 @@ const MealDetails = () => {
     likes,
     reviews,
     category,
-  } = loadedMeal;
-  // console.log("meal upcoming detais image", meal_image);
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const axiosSecure = useAxiosSecure();
-  const loggedUser = useUser();
-  // console.log(loggedUser);
-  const isLoggedUser = loggedUser && loggedUser?.status;
-  const handleMealRequest = () => {
-    if (user && user.email) {
-      //  send data to database
-
-      const mealRequestInfo = {
-        mealId: _id,
-        name: user?.displayName,
-        email: user?.email,
-        title,
-        meal_image,
-        likes,
-        reviews,
-        status: "pending",
-      };
-      axiosSecure.post("/meal-request", mealRequestInfo).then((res) => {
-        console.log(res.data);
-        if (res.data.insertedId) {
-          toast.success("Meal request successful!");
-          // Swal.fire({
-          //   position: "top-end",
-          //   icon: "success",
-          //   title: `${name} added to cart`,
-          //   showConfirmButton: false,
-          //   timer: 1500,
-          // });
-          // refetch the cart
-          // refetch();
-        }
-      });
-    } else {
-      Swal.fire({
-        title: "Yor are not Logged in?",
-        text: "please login add to cart!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, Login!",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate("/login", { state: { from: location } });
-        }
-      });
-    }
-  };
+  } = upcomingMeals;
   return (
     <div className="mb-16">
       <Helmet>
-        <title>Hotelier | Meal Details</title>
+        <title>Hotelier | Upcoming Meal Details</title>
       </Helmet>
       <div className="card glass">
-        <figure className="">
-          <img className="" src={meal_image} alt="car!" />
+        <figure>
+          <img className="w-full" src={meal_image} alt="car!" />
         </figure>
 
         <div className="card-body space-y-3">
@@ -138,15 +87,9 @@ const MealDetails = () => {
               </div>
             </div>
 
-            {isLoggedUser ? (
-              <Link onClick={handleMealRequest}>
-                <button className="btn btn-primary">Meal Request</button>
-              </Link>
-            ) : (
-              <button disabled className="btn btn-primary">
-                Meal Request
-              </button>
-            )}
+            <button disabled className="btn btn-primary">
+              Meal Request
+            </button>
           </div>
         </div>
       </div>
@@ -154,4 +97,4 @@ const MealDetails = () => {
   );
 };
 
-export default MealDetails;
+export default UpcomingMealDetails;

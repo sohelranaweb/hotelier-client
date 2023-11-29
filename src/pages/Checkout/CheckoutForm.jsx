@@ -88,6 +88,7 @@ const CheckoutForm = () => {
         }
         const updateUser = {
           badge: badge?.package_name,
+          status: "Membership",
         };
         const userUpdateRes = await axiosSecure.patch(
           `/users/${user?.email}`,

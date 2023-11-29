@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { Helmet } from "react-helmet-async";
 
 const UpdateMeal = () => {
   const { id } = useParams();
@@ -13,7 +14,7 @@ const UpdateMeal = () => {
       return res.data;
     },
   });
-  console.log(meal);
+  // console.log(meal);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -52,7 +53,9 @@ const UpdateMeal = () => {
   };
   return (
     <div className="pt-28 mb-16">
-      <h1>update meal page: {id}</h1>
+      <Helmet>
+        <title>Hotelier | Update Meal</title>
+      </Helmet>
       <div className="w-full h-[600px] flex flex-col justify-center items-center text-gray-800 rounded-xl bg-gray-50">
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
@@ -241,7 +244,7 @@ const UpdateMeal = () => {
             <input
               type="submit"
               value="Update meal"
-              className="btn btn-block text-white bg-[#72B261]"
+              className="btn btn-block text-white bg-[#f62b48]"
             />
             {/* <button
               type="submit"

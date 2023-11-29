@@ -20,6 +20,9 @@ import UpcomingMeals from "../pages/UpcomingMeals/UpcomingMeals";
 import Checkout from "../pages/Checkout/Checkout";
 import PrivateRoute from "./PrivateRoute";
 import Payment from "../pages/Checkout/Payment";
+import ServeMeals from "../pages/Dashboard/ServeMeals/ServeMeals";
+import UpcomingMealDetails from "../pages/UpcomingMeals/UpcomingMealDetails";
+import DashboardUpcomingMeals from "../pages/Dashboard/DasboardUpcomingMeals/DashboardUpcomingMeals";
 
 export const router = createBrowserRouter([
   {
@@ -38,7 +41,11 @@ export const router = createBrowserRouter([
         path: "/meal/:id",
         element: <MealDetails></MealDetails>,
         loader: ({ params }) =>
-          fetch(`http://localhost:5000/meal/${params.id}`),
+          fetch(`https://hotelier-server.vercel.app/meal/${params.id}`),
+      },
+      {
+        path: "/upcomingMeal/:id",
+        element: <UpcomingMealDetails></UpcomingMealDetails>,
       },
       {
         path: "/signup",
@@ -53,7 +60,7 @@ export const router = createBrowserRouter([
         element: <UpdateMeal></UpdateMeal>,
       },
       {
-        path: "/upcoming-meals",
+        path: "/upcomingMeals",
         element: <UpcomingMeals></UpcomingMeals>,
       },
       {
@@ -123,6 +130,14 @@ export const router = createBrowserRouter([
       {
         path: "allReviews",
         element: <AllReviews></AllReviews>,
+      },
+      {
+        path: "serveMeals",
+        element: <ServeMeals></ServeMeals>,
+      },
+      {
+        path: "upcomingMeals",
+        element: <DashboardUpcomingMeals></DashboardUpcomingMeals>,
       },
     ],
   },

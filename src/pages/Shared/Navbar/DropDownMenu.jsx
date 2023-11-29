@@ -10,10 +10,10 @@ const DropdownMenu = () => {
   };
   const { user, logOut } = useAuth();
   // console.log(user);
-
+  // const [isAdmin] = useAdmin();
   return (
     <div className="relative">
-      <div className=" cursor-pointer" onClick={toggleDropdown}>
+      <div className=" cursor-pointer lg:pr-4 pr-12" onClick={toggleDropdown}>
         {user ? (
           <>
             <img
@@ -40,6 +40,7 @@ const DropdownMenu = () => {
                 <p className="px-4 py-3 hover:bg-neutral-100 transition font-semibold ">
                   {user.displayName}
                 </p>
+
                 <Link
                   to="/dashboard"
                   className="px-4 py-3 hover:bg-neutral-100 transition font-semibold"

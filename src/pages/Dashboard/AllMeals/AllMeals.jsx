@@ -3,6 +3,7 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { Helmet } from "react-helmet-async";
 
 const AllMeals = () => {
   const axiosSecure = useAxiosSecure();
@@ -39,14 +40,16 @@ const AllMeals = () => {
   };
   return (
     <div>
-      <h1>All meals here: {meals.length}</h1>
+      <Helmet>
+        <title>Hotelier | Dashboar All Meals</title>
+      </Helmet>
       <div>
         <div className="overflow-x-auto">
           <table className="table table-zebra">
             {/* head */}
-            <thead className="bg-orange-400 text-white">
+            <thead className="bg-gray-600 text-white">
               <tr>
-                <th className="text-base"></th>
+                <th className="text-base">serial</th>
                 <th className="text-base">Meal Title</th>
                 <th className="text-base">Likes</th>
                 <th className="text-base">Reviews</th>
