@@ -1,10 +1,5 @@
 import { Rating } from "@smastrom/react-rating";
-import {
-  Link,
-  useLoaderData,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { MdPreview } from "react-icons/md";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
@@ -12,9 +7,27 @@ import Swal from "sweetalert2";
 import useUser from "../../hooks/useUser";
 import toast from "react-hot-toast";
 import { Helmet } from "react-helmet-async";
+import { AiOutlineLike } from "react-icons/ai";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { AwesomeButton } from "react-awesome-button";
 
 const MealDetails = () => {
-  const loadedMeal = useLoaderData();
+  const axiosSecure = useAxiosSecure();
+  const { id } = useParams();
+  // console.log(id);
+  const { data: meals = [] } = useQuery({
+    enabled: !!id,
+    queryKey: ["meals", id],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/meal/${id}`);
+      setReview(parseInt(res.data.reviews));
+      setLike(parseInt(res.data.likes));
+      return res.data;
+    },
+  });
+  // console.log(meals);
+
   const {
     _id,
     meal_image,
@@ -27,13 +40,17 @@ const MealDetails = () => {
     likes,
     reviews,
     category,
-  } = loadedMeal;
+  } = meals;
+  // console.log("review", reviews);
   // console.log("meal upcoming detais image", meal_image);
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const axiosSecure = useAxiosSecure();
   const loggedUser = useUser();
+  const [review, setReview] = useState(reviews);
+  const [isReview, setIsReview] = useState(false);
+  const [like, setLike] = useState(likes);
+  const [isLike, setIsLike] = useState(false);
   // console.log(loggedUser);
   const isLoggedUser = loggedUser && loggedUser?.status;
   const handleMealRequest = () => {
@@ -54,17 +71,79 @@ const MealDetails = () => {
         console.log(res.data);
         if (res.data.insertedId) {
           toast.success("Meal request successful!");
-          // Swal.fire({
-          //   position: "top-end",
-          //   icon: "success",
-          //   title: `${name} added to cart`,
-          //   showConfirmButton: false,
-          //   timer: 1500,
-          // });
-          // refetch the cart
-          // refetch();
         }
       });
+    } else {
+      Swal.fire({
+        title: "Yor are not Logged in?",
+        text: "please login add to cart!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Login!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login", { state: { from: location } });
+        }
+      });
+    }
+  };
+  const handleReview = async (event) => {
+    event.preventDefault();
+    const updatedReview = isReview ? review - 1 : review + 1;
+    setReview(updatedReview);
+    setIsReview(!isReview);
+
+    // const rev = axiosSecure.patch(`/meals/${_id}`, parseInt(reviews));
+    // console.log("after review", rev.data);
+
+    if (user && user.email) {
+      const form = event.target;
+      const review_comment = form.review.value;
+
+      console.log(review_comment);
+
+      //  send data to database
+      const mealReviewInfo = {
+        mealId: _id,
+        name: user?.displayName,
+        email: user?.email,
+        title,
+        meal_image,
+        likes,
+        review_comment,
+        reviews,
+      };
+      axiosSecure.post("/reviews", mealReviewInfo).then((res) => {
+        console.log(res.data);
+        if (res.data.insertedId) {
+          toast.success("Meal review successful!");
+        }
+      });
+    } else {
+      Swal.fire({
+        title: "Yor are not Logged in?",
+        text: "please login add to cart!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Login!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login", { state: { from: location } });
+        }
+      });
+    }
+  };
+  const handleLike = async (event) => {
+    event.preventDefault();
+
+    if (user && user.email) {
+      const updatedLike = isLike ? like - 1 : like + 1;
+      setLike(updatedLike);
+      setIsLike(!isLike);
     } else {
       Swal.fire({
         title: "Yor are not Logged in?",
@@ -107,40 +186,35 @@ const MealDetails = () => {
             {/* like and review button  */}
 
             <div className="stats shadow">
-              <div className="stat cursor-pointer">
-                <div className="stat-figure text-primary">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    className="inline-block w-8 h-8 stroke-current"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                    ></path>
-                  </svg>
-                </div>
-                <div className="stat-title">Likes</div>
-                <div className="stat-value text-primary">{likes}K</div>
-                <div className="stat-desc">21% more than last month</div>
+              <div className="stat ">
+                <Link onClick={handleLike} className="stat-figure">
+                  <p className={"" + (isLike ? "text-primary" : "")}>
+                    <AiOutlineLike className="text-4xl"></AiOutlineLike>
+                  </p>
+                </Link>
+
+                <div className="stat-value text-primary">{like}K</div>
               </div>
 
-              <div className="stat cursor-pointer">
-                <div className="stat-figure text-secondary">
-                  <MdPreview className="text-4xl"></MdPreview>
-                </div>
-                <div className="stat-title">Reviews</div>
-                <div className="stat-value text-secondary">{reviews}M</div>
-                <div className="stat-desc">21% more than last month</div>
+              <div className="stat">
+                <Link
+                  onClick={() =>
+                    document.getElementById("my_modal_3").showModal()
+                  }
+                  className="stat-figure"
+                >
+                  <p className={"" + (isReview ? "text-primary" : "")}>
+                    <MdPreview className="text-4xl"></MdPreview>
+                  </p>
+                </Link>
+
+                <div className="stat-value text-secondary">{review}M</div>
               </div>
             </div>
 
             {isLoggedUser ? (
               <Link onClick={handleMealRequest}>
-                <button className="btn btn-primary">Meal Request</button>
+                <AwesomeButton type="secondary">Meal Request</AwesomeButton>
               </Link>
             ) : (
               <button disabled className="btn btn-primary">
@@ -150,6 +224,43 @@ const MealDetails = () => {
           </div>
         </div>
       </div>
+      <dialog id="my_modal_3" className="modal">
+        <div className="modal-box">
+          <form method="dialog">
+            {/* if there is a button in form, it will close the modal */}
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+              ✕
+            </button>
+          </form>
+          <h3 className="font-bold text-lg">
+            Please some feedback about Our Meal
+          </h3>
+          <form onSubmit={handleReview}>
+            <div className="md:flex mb-8">
+              <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text"></span>
+                </label>
+                <label className="input-group">
+                  <input
+                    type="text"
+                    name="review"
+                    // defaultValue={job_title}
+                    placeholder="review"
+                    className="input input-bordered w-full"
+                  />
+                </label>
+              </div>
+            </div>
+
+            <input
+              type="submit"
+              value="Submit"
+              className="btn btn-block text-white bg-[#f62b48]"
+            />
+          </form>
+        </div>
+      </dialog>
     </div>
   );
 };

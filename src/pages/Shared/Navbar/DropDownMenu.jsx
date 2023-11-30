@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
+import useAdmin from "../../../hooks/useAdmin";
 
 const DropdownMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,7 +11,7 @@ const DropdownMenu = () => {
   };
   const { user, logOut } = useAuth();
   // console.log(user);
-  // const [isAdmin] = useAdmin();
+  const [isAdmin] = useAdmin();
   return (
     <div className="relative">
       <div className=" cursor-pointer lg:pr-4 pr-12" onClick={toggleDropdown}>
@@ -41,12 +42,22 @@ const DropdownMenu = () => {
                   {user.displayName}
                 </p>
 
-                <Link
+                {user && isAdmin && (
+                  <li>
+                    <Link to="/dashboard/adminProfile">Dashboard</Link>
+                  </li>
+                )}
+                {user && !isAdmin && (
+                  <li>
+                    <Link to="/dashboard/myProfile">Dashboard</Link>
+                  </li>
+                )}
+                {/* <Link
                   to="/dashboard"
                   className="px-4 py-3 hover:bg-neutral-100 transition font-semibold"
                 >
                   Dashboard
-                </Link>
+                </Link> */}
                 <Link
                   onClick={logOut}
                   className="px-4 py-3 hover:bg-neutral-100 transition font-semibold"

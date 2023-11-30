@@ -79,7 +79,7 @@ const ManageUsers = () => {
                     ) : (
                       <button
                         onClick={() => handleMakeAdmin(user)}
-                        className="btn bg-stone-400 btn-md"
+                        className="btn bg-rose-400 btn-md"
                       >
                         <FaUsers className="text-white text-xl"></FaUsers>
                       </button>

@@ -23,11 +23,13 @@ import Payment from "../pages/Checkout/Payment";
 import ServeMeals from "../pages/Dashboard/ServeMeals/ServeMeals";
 import UpcomingMealDetails from "../pages/UpcomingMeals/UpcomingMealDetails";
 import DashboardUpcomingMeals from "../pages/Dashboard/DasboardUpcomingMeals/DashboardUpcomingMeals";
+import ErrorPage from "../pages/ErrorPage/ErrorPage";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <Main></Main>,
+    errorElement: <ErrorPage></ErrorPage>,
     children: [
       {
         path: "/",
@@ -40,8 +42,6 @@ export const router = createBrowserRouter([
       {
         path: "/meal/:id",
         element: <MealDetails></MealDetails>,
-        loader: ({ params }) =>
-          fetch(`https://hotelier-server.vercel.app/meal/${params.id}`),
       },
       {
         path: "/upcomingMeal/:id",

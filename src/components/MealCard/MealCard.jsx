@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { Rating } from "@smastrom/react-rating";
-
-
+import { AwesomeButton } from "react-awesome-button";
 
 const MealCard = ({ item }) => {
   const { _id, title, meal_image, price, rating, ingredients } = item;
@@ -19,9 +18,10 @@ const MealCard = ({ item }) => {
         <Rating style={{ maxWidth: 180 }} value={rating} readOnly />
         <div className="card-actions justify-end">
           <Link to={`/meal/${_id}`}>
-            <button className="btn btn-outline border-0 border-b-4 mb-4 bg-slate-100 border-[#f62b48]">
+            {/* <button className="btn btn-outline border-0 border-b-4 mb-4 bg-slate-100 border-[#f62b48]">
               Details
-            </button>
+            </button> */}
+            <AwesomeButton type="secondary">Details</AwesomeButton>
           </Link>
         </div>
       </div>

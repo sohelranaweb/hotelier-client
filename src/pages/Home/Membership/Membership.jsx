@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import useBadge from "../../../hooks/useBadge";
+import { AwesomeButton } from "react-awesome-button";
 
 const Membership = () => {
   const [badges] = useBadge();
@@ -20,11 +21,8 @@ const Membership = () => {
             </h2>
             <p className="text-rose-500 text-2xl font-bold">$ {badge.price}</p>
             <div className="card-actions justify-end">
-              <Link
-                to={`checkout/${badge.package_name}`}
-                className="btn bg-rose-500 border-0 text-white"
-              >
-                Explore
+              <Link to={`checkout/${badge.package_name}`}>
+                <AwesomeButton type="secondary">Explore</AwesomeButton>
               </Link>
             </div>
           </div>

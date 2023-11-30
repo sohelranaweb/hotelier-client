@@ -8,6 +8,7 @@ import AuthProvider from "./providers/AuthProvider.jsx";
 import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HelmetProvider } from "react-helmet-async";
+import "react-awesome-button/dist/styles.css";
 
 const queryClient = new QueryClient();
 

@@ -8,7 +8,7 @@ const ServeMeals = () => {
   const { data: meals = [], refetch } = useQuery({
     queryKey: ["meals"],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/meal-request/admin`);
+      const res = await axiosSecure.get(`/meal-request`);
       return res.data;
     },
   });
